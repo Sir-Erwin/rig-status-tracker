@@ -1,0 +1,224 @@
+{
+    "assets": [
+      { "id": "permian", "name": "Permian Basin (Texas)",
+        "rigs": [
+          {
+            "id": 1,
+            "performanceData": {
+              "production": 1000,
+              "downtime": 5,
+              "efficiency": 95
+            }
+          },
+          {
+            "id": 2,
+            "performanceData": {
+              "production": 1200,
+              "downtime": 3,
+              "efficiency": 97
+            }
+          },
+          {
+            "id": 3,
+            "performanceData": {
+              "production": 1100,
+              "downtime": 4,
+              "efficiency": 96
+            }
+          },
+          {
+            "id": 4,
+            "performanceData": {
+              "production": 900,
+              "downtime": 6,
+              "efficiency": 92
+            }
+          },
+          {
+            "id": 5,
+            "performanceData": {
+              "production": 1050,
+              "downtime": 2,
+              "efficiency": 98
+            }
+          }
+        ]
+      },
+      { "id": "eagle-ford", "name": "Eagle Ford Shale (Texas)",
+        "rigs": [
+          {
+            "id": 1,
+            "performanceData": {
+              "production": 800,
+              "downtime": 10,
+              "efficiency": 90
+            }
+          },
+          {
+            "id": 2,
+            "performanceData": {
+              "production": 850,
+              "downtime": 8,
+              "efficiency": 89
+            }
+          },
+          {
+            "id": 3,
+            "performanceData": {
+              "production": 780,
+              "downtime": 12,
+              "efficiency": 88
+            }
+          },
+          {
+            "id": 4,
+            "performanceData": {
+              "production": 820,
+              "downtime": 9,
+              "efficiency": 91
+            }
+          },
+          {
+            "id": 5,
+            "performanceData": {
+              "production": 830,
+              "downtime": 7,
+              "efficiency": 92
+            }
+          }
+        ]
+      },
+      { "id": "spraberry", "name": "Spraberry Trend (Texas)",
+        "rigs": [
+          {
+            "id": 1,
+            "performanceData": {
+              "production": 950,
+              "downtime": 6,
+              "efficiency": 93
+            }
+          },
+          {
+            "id": 2,
+            "performanceData": {
+              "production": 970,
+              "downtime": 5,
+              "efficiency": 94
+            }
+          },
+          {
+            "id": 3,
+            "performanceData": {
+              "production": 920,
+              "downtime": 8,
+              "efficiency": 92
+            }
+          },
+          {
+            "id": 4,
+            "performanceData": {
+              "production": 900,
+              "downtime": 7,
+              "efficiency": 91
+            }
+          },
+          {
+            "id": 5,
+            "performanceData": {
+              "production": 940,
+              "downtime": 4,
+              "efficiency": 95
+            }
+          }
+        ]
+      },
+      { "id": "niobrara", "name": "Niobrara Formation (Colorado/Wyoming)",
+        "rigs": [
+          {
+            "id": 1,
+            "performanceData": {
+              "production": 700,
+              "downtime": 11,
+              "efficiency": 85
+            }
+          },
+          {
+            "id": 2,
+            "performanceData": {
+              "production": 720,
+              "downtime": 10,
+              "efficiency": 86
+            }
+          },
+          {
+            "id": 3,
+            "performanceData": {
+              "production": 680,
+              "downtime": 12,
+              "efficiency": 84
+            }
+          },
+          {
+            "id": 4,
+            "performanceData": {
+              "production": 690,
+              "downtime": 9,
+              "efficiency": 87
+            }
+          },
+          {
+            "id": 5,
+            "performanceData": {
+              "production": 710,
+              "downtime": 8,
+              "efficiency": 88
+            }
+          }
+        ]
+      },
+      { "id": "bakken", "name": "Bakken Formation (North Dakota/Montana)",
+        "rigs": [
+          {
+            "id": 1,
+            "performanceData": {
+              "production": 600,
+              "downtime": 15,
+              "efficiency": 80
+            }
+          },
+          {
+            "id": 2,
+            "performanceData": {
+              "production": 620,
+              "downtime": 14,
+              "efficiency": 81
+            }
+          },
+          {
+            "id": 3,
+            "performanceData": {
+              "production": 580,
+              "downtime": 16,
+              "efficiency": 79
+            }
+          },
+          {
+            "id": 4,
+            "performanceData": {
+              "production": 590,
+              "downtime": 13,
+              "efficiency": 82
+            }
+          },
+          {
+            "id": 5,
+            "performanceData": {
+              "production": 610,
+              "downtime": 12,
+              "efficiency": 83
+            }
+          }
+        ]
+      }
+    ]
+  }

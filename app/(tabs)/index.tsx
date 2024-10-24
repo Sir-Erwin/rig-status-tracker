@@ -1,18 +1,46 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
+import React, { useState, useEffect } from 'react';
+import { Image, StyleSheet } from 'react-native';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-export default function HomeScreen() {
+import AssetPicker from '@/components/AssetPicker'; 
+
+
+const HomeScreen = () => {
+  const [selectedValue, setSelectedValue] = useState<string>("choose");
+  const [assetDetails, setAssetDetails] = useState<any>(null); // State to hold asset details
+  const [loading, setLoading] = useState<boolean>(false); // State to manage loading
+
+  useEffect(() => {
+    const fetchAssetDetails = async () => {
+      if (selectedValue !== "choose") {
+        setLoading(true);
+        try {
+          const response = await fetch(`http://localhost:5000/assets/${selectedValue}`);
+          const data = await response.json();
+          setAssetDetails(data);
+        } catch (error) {
+          console.error('Error fetching asset details:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setAssetDetails(null); // Reset asset details if "choose" is selected
+      }
+    };
+
+    fetchAssetDetails(); // Call the function whenever selectedValue changes
+  }, [selectedValue]); // Dependency array includes selectedValue
+
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerBackgroundColor={{ light: '#233452', dark: '#080808' }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={require('@/assets/images/tesla-sol-brand-logo.png')}
+          style={styles.brandLogo}
         />
       }>
       <ThemedView style={styles.titleContainer}>
@@ -20,35 +48,30 @@ export default function HomeScreen() {
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
+      <ThemedText type="subtitle">Choose your Asset</ThemedText>
+        <AssetPicker selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
+
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+      
     </ParallaxScrollView>
   );
-}
+};
+
+const AssetDetails = ({ assetDetails }: { assetDetails: any }) => {
+  return (
+    <ThemedView style={styles.assetDetailsContainer}>
+      <ThemedText type="subtitle">{assetDetails.name}</ThemedText>
+      {assetDetails.rigs.map((rig: any) => (
+        <ThemedView key={rig.id} style={styles.rigContainer}>
+          <ThemedText>Rig ID: {rig.id}</ThemedText>
+          <ThemedText>Production: {rig.performanceData.production} units</ThemedText>
+          <ThemedText>Downtime: {rig.performanceData.downtime} hours</ThemedText>
+          <ThemedText>Efficiency: {rig.performanceData.efficiency}%</ThemedText>
+        </ThemedView>
+      ))}
+    </ThemedView>
+  );
+};
 
 const styles = StyleSheet.create({
   titleContainer: {
@@ -60,11 +83,26 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 8,
   },
-  reactLogo: {
+  assetDetailsContainer: {
+    marginTop: 16,
+    padding: 10,
+    backgroundColor: '#f0f0f0', // Optional: Add a background color for better visibility
+    borderRadius: 8,
+  },
+  rigContainer: {
+    marginVertical: 5,
+    padding: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  brandLogo: {
     height: 178,
-    width: 290,
+    width: 400,
     bottom: 0,
     left: 0,
     position: 'absolute',
   },
 });
+
+export default HomeScreen;
