@@ -14,10 +14,10 @@ const AssetPicker: React.FC<AssetPickerProps> = ({ selectedValue, setSelectedVal
       
       <Picker
         selectedValue={selectedValue}
-        style={{ height: 50, backgroundColor: '#ecedee' }} // Set background color for the Picker
+        style={{ margin: 0, padding: 0, backgroundColor: '#ecedee'}} // Set background color for the Picker and center it
         onValueChange={(itemValue: string) => setSelectedValue(itemValue)}
       >
-        <Picker.Item label="Choose" value="choose" />
+        <Picker.Item label="Choose Your Asset" value="choose" />
         <Picker.Item label="Permian Basin (Texas)" value="permian" />
         <Picker.Item label="Eagle Ford Shale (Texas)" value="eagle-ford" />
         <Picker.Item label="Spraberry Trend (Texas)" value="spraberry" />

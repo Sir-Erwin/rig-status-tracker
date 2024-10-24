@@ -1,102 +1,149 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
+import { Card } from "@gluestack-ui/themed";
+import { CartesianChart, Bar, useChartPressState } from "victory-native";
+import {useFont, vec } from "@shopify/react-native-skia";
+import { useColorScheme } from "react-native";
+import { COLORMODES } from "@gluestack-style/react/lib/typescript/types";
+import { BarChart, barDataItem } from 'react-native-gifted-charts';
+
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useAsset } from '@/app/context/AssetContext';
+import AssetPicker from '@/components/AssetPicker'; 
+import { rgbaColor } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 
-export default function TabTwoScreen() {
+
+const TabTwoScreen = () => {
+  const { selectedValue, setSelectedValue } = useAsset();
+  const [assetDetails, setAssetDetails] = useState<any>(null); // State to hold asset details
+  const [loading, setLoading] = useState<boolean>(false); // State to manage loading
+
+  useEffect(() => {
+    const fetchAssetDetails = async () => {
+      if (selectedValue !== "choose") {
+        setLoading(true);
+        try {
+          const response = await fetch(`https://asset-tracker-51790a967fc8.herokuapp.com/assets/${selectedValue}`);
+          const data = await response.json();
+          setAssetDetails(data);
+        } catch (error) {
+          console.error('Error fetching asset details:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setAssetDetails(null); // Reset asset details if "choose" is selected
+      }
+    };
+
+    const scrollToBottom = () => {
+      const scrollView = document.getElementById('scrollViewId'); // Replace with your actual scroll view ID
+      if (scrollView) {
+        scrollView.scrollTop = scrollView.scrollHeight;
+      }
+    };
+
+    fetchAssetDetails(); // Call the function whenever selectedValue changes
+    scrollToBottom();
+    
+  }, [selectedValue]); // Dependency array includes selectedValue
+
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+      headerBackgroundColor={{ light: '#233452', dark: '#080808' }}
+      headerImage={
+        <Image
+          source={require('@/assets/images/tesla-sol-brand-logo.png')}
+          style={styles.brandLogo}
+        />
+      }>
+      <ThemedView style={styles.stepContainer}>
+        <AssetPicker selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library
-          to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
+      
+      <AssetGraph assetDetails={assetDetails} />
+      
     </ParallaxScrollView>
   );
-}
+};
+
+const AssetGraph = ({ assetDetails }: { assetDetails: any }) => {
+  if (!assetDetails) return (
+    <ThemedView style={styles.stepContainer}>
+      <ThemedText type="subtitle">No asset selected{"\n"}</ThemedText>
+      <Card style={styles.chartContainer}>
+        <BarChart
+          data={[{value: 0}, {value: 0}, {value: 0}, {value: 0}, {value: 0}]}
+        />
+      </Card>
+    </ThemedView>
+  );
+
+  // Define a new type for the rig data
+  type RigData = {
+    id: string;
+    rateOfProduction: number;
+  };
+
+  // Calculate Rate of Production for each rig
+  const data: RigData[] = assetDetails.rigs.map((rig: any) => ({
+    id: rig.id,
+    rateOfProduction: rig.performanceData.efficiency,
+  }));
+
+  // Prepare data for the chart
+  const chartData: barDataItem[] = data.map((rig) => ({label: `Rig ${rig.id}`, value: rig.rateOfProduction}));
+  
+  return (
+    <ThemedView style={styles.stepContainer}>
+      <ThemedText type="subtitle">Efficiency Of Each Rig{"\n"}</ThemedText>
+      <Card style={styles.chartContainer}>
+          <BarChart
+            data={chartData}
+            barInnerComponent={(bar) => (<ThemedView style={{ backgroundColor: '#DB1B3D', flex: 1 }} />)}
+            spacing={20}
+            noOfSections={4}
+            isAnimated
+            animationDuration={500}
+            dashGap={15}
+            dashWidth={2}
+            showLine={true}
+            yAxisThickness={0}
+          />
+        </Card>
+    </ThemedView>
+    
+  );
+};
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
   titleContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
   },
+  stepContainer: {
+    gap: 8,
+    marginBottom: 8,
+  },
+  chartContainer: {
+    backgroundColor: 'white',
+    paddingTop: 10,
+    paddingBottom: 2,
+    width: '95%',
+    height: '80%',
+    borderRadius: 15,
+  },
+  brandLogo: {
+    height: 178,
+    width: 400,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+  },
 });
+
+export default TabTwoScreen;

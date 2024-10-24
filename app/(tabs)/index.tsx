@@ -4,21 +4,23 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useAsset } from '@/app/context/AssetContext';
 
 import AssetPicker from '@/components/AssetPicker'; 
 
 
 const HomeScreen = () => {
-  const [selectedValue, setSelectedValue] = useState<string>("choose");
+  const { selectedValue, setSelectedValue } = useAsset();
   const [assetDetails, setAssetDetails] = useState<any>(null); // State to hold asset details
   const [loading, setLoading] = useState<boolean>(false); // State to manage loading
+
 
   useEffect(() => {
     const fetchAssetDetails = async () => {
       if (selectedValue !== "choose") {
         setLoading(true);
         try {
-          const response = await fetch(`http://localhost:5000/assets/${selectedValue}`);
+          const response = await fetch(`https://asset-tracker-51790a967fc8.herokuapp.com/assets/${selectedValue}`);
           const data = await response.json();
           setAssetDetails(data);
         } catch (error) {
@@ -48,19 +50,29 @@ const HomeScreen = () => {
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-      <ThemedText type="subtitle">Choose your Asset</ThemedText>
         <AssetPicker selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
-
       </ThemedView>
+      
+      <ThemedView style={styles.stepContainer}>
+        <AssetDetails assetDetails={assetDetails} />
+      </ThemedView>
+      
       
     </ParallaxScrollView>
   );
 };
 
 const AssetDetails = ({ assetDetails }: { assetDetails: any }) => {
+  if (!assetDetails) return (
+    <ThemedView style={styles.stepContainer}>
+      <ThemedText type="subtitle">No asset selected</ThemedText>
+    </ThemedView>
+  );
+
   return (
-    <ThemedView style={styles.assetDetailsContainer}>
+    <ThemedView style={styles.stepContainer}>
       <ThemedText type="subtitle">{assetDetails.name}</ThemedText>
+
       {assetDetails.rigs.map((rig: any) => (
         <ThemedView key={rig.id} style={styles.rigContainer}>
           <ThemedText>Rig ID: {rig.id}</ThemedText>
