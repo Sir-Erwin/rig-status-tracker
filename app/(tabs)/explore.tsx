@@ -1,19 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
+import { Image, StyleSheet, ScrollView } from 'react-native';
 
 import { Card } from "@gluestack-ui/themed";
-import { CartesianChart, Bar, useChartPressState } from "victory-native";
-import {useFont, vec } from "@shopify/react-native-skia";
-import { useColorScheme } from "react-native";
-import { COLORMODES } from "@gluestack-style/react/lib/typescript/types";
 import { BarChart, barDataItem } from 'react-native-gifted-charts';
 
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import ParallaxScrollView from '@/components/ParallaxScrollView'; 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useAsset } from '@/app/context/AssetContext';
-import AssetPicker from '@/components/AssetPicker'; 
-import { rgbaColor } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import AssetPicker from '@/components/AssetPicker';
 
 
 const TabTwoScreen = () => {
@@ -21,6 +16,7 @@ const TabTwoScreen = () => {
   const [assetDetails, setAssetDetails] = useState<any>(null); // State to hold asset details
   const [loading, setLoading] = useState<boolean>(false); // State to manage loading
 
+  const scrollViewRef = useRef<ScrollView>(null);
   useEffect(() => {
     const fetchAssetDetails = async () => {
       if (selectedValue !== "choose") {
@@ -40,19 +36,16 @@ const TabTwoScreen = () => {
     };
 
     const scrollToBottom = () => {
-      const scrollView = document.getElementById('scrollViewId'); // Replace with your actual scroll view ID
-      if (scrollView) {
-        scrollView.scrollTop = scrollView.scrollHeight;
-      }
+      // Assuming you have a reference to the ScrollView
+      scrollViewRef.current?.scrollToEnd({ animated: true });
     };
 
     fetchAssetDetails(); // Call the function whenever selectedValue changes
-    scrollToBottom();
-    
   }, [selectedValue]); // Dependency array includes selectedValue
 
   return (
     <ParallaxScrollView
+      
       headerBackgroundColor={{ light: '#233452', dark: '#080808' }}
       headerImage={
         <Image
@@ -74,11 +67,7 @@ const AssetGraph = ({ assetDetails }: { assetDetails: any }) => {
   if (!assetDetails) return (
     <ThemedView style={styles.stepContainer}>
       <ThemedText type="subtitle">No asset selected{"\n"}</ThemedText>
-      <Card style={styles.chartContainer}>
-        <BarChart
-          data={[{value: 0}, {value: 0}, {value: 0}, {value: 0}, {value: 0}]}
-        />
-      </Card>
+      
     </ThemedView>
   );
 
